@@ -1,0 +1,1 @@
+export const BASE_URL = "https://dev.tuten.cl:443/TutenREST/rest/";
