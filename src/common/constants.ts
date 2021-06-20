@@ -10,3 +10,5 @@ export const PRIMARY_DARK_COLOR = "#002984";
 export const SECUNDARY_COLOR = "#f44336";
 export const SECUNDARY_LIGHT_COLOR = "#ff7961";
 export const SECUNDARY_DARK_COLOR = "#ba000d";
+
+export const GRAY_BACKGROUND_COLOR = "#eee";

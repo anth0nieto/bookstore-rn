@@ -4,18 +4,21 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
+  ActivityIndicator,
 } from 'react-native';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import CustomButton from './custom-button';
-import { EMAIL_ADDRESS, FORGOT_PASSWORD, PASSWORD, SIGN_IN } from '../constants';
+import { BOOKSTORE, COPYRIGHT, EMAIL_ADDRESS, FORGOT_PASSWORD, PASSWORD, SIGN_IN } from '../constants';
 import CustomTextInput from './custom-text-input';
 import { Credentials } from '../model';
 
 type LoginFormProps = {
   onSubmit: (credentials: Credentials) => void;
+  isLoading: boolean;
+  isError: boolean;
 };
 
 const styles = StyleSheet.create({
@@ -30,9 +33,15 @@ const styles = StyleSheet.create({
     fontSize: wp(3),
     color: '#fff',
   },
+  copyrightText: {
+    marginTop: hp(2),
+    textAlign: 'center',
+    fontSize: wp(3),
+    color: '#fff',
+  },
 });
 
-const LoginForm: React.FC<LoginFormProps> = ({ onSubmit }) => {
+const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, isLoading, isError }) => {
 
   const [state, setState] = useState<Credentials>({
     email: "",
@@ -56,8 +65,10 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit }) => {
 
       <CustomButton
         text={SIGN_IN}
-        disabled={false}
+        disabled={isLoading}
         activeOpacity={0.2}
+        loading={isLoading}
+        loadingComponent={() => <ActivityIndicator size={hp(3)} color='white' />}
         onPress={() => onSubmit(state)}
       />
 
@@ -67,6 +78,10 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit }) => {
           {FORGOT_PASSWORD}
         </Text>
       </TouchableOpacity>
+
+      <Text style={styles.copyrightText}>
+        {COPYRIGHT} {BOOKSTORE}
+      </Text>
     </View>
   );
 };

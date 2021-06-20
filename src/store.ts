@@ -10,7 +10,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const persistConfig = {
   key: "root",
   storage: AsyncStorage,
-  //blacklist: ["books"],
+  blacklist: ["books"],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

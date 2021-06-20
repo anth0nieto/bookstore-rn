@@ -6,6 +6,8 @@ import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-nat
 type CustomButtonProps = {
   text: string;
   backgroundColor?: string;
+  loading: boolean;
+  loadingComponent?: React.FunctionComponent,
 } & TouchableOpacityProps;
 
 const styles = StyleSheet.create({
@@ -25,15 +27,29 @@ const styles = StyleSheet.create({
 });
 
 
-const CustomButton: React.FC<CustomButtonProps> = ({ text, disabled, onPress, backgroundColor = PRIMARY_COLOR }) => {
-  return (
-    <TouchableOpacity
-      style={{ ...styles.root, backgroundColor }}
-      disabled={disabled}
-      onPress={onPress} >
-      <Text style={styles.text}>{text}</Text>
-    </TouchableOpacity>
-  );
-};
+const CustomButton: React.FC<CustomButtonProps> =
+  ({ text,
+    disabled,
+    onPress,
+    backgroundColor = PRIMARY_COLOR,
+    loadingComponent: Loading,
+    loading }) => {
+    return (
+      <TouchableOpacity
+        style={{ ...styles.root, backgroundColor }}
+        disabled={disabled}
+        onPress={onPress} >
+        {
+          loading ? (
+            Loading ?
+              <Loading /> : null
+          ) : (
+            <Text style={styles.text}>
+              {text}
+            </Text>)
+        }
+      </TouchableOpacity>
+    );
+  };
 
 export default CustomButton;

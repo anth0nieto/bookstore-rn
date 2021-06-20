@@ -7,6 +7,10 @@ import { AuthContext } from './context';
 //SCREEN CONTAINERS
 import LoginContainer from '@bookstore/login/components/login-container';
 import BookingContainer from '@bookstore/booking/components/booking-container';
+import { useSelector } from 'react-redux';
+import { RootState } from '@bookstore/common/store';
+import { logout } from '@bookstore/login/store/slices/user-slice';
+import { showToast } from '@bookstore/common/utils';
 
 const AppStack = createStackNavigator();
 const AuthStack = createStackNavigator();
@@ -14,13 +18,17 @@ const AuthStack = createStackNavigator();
 const MainStack = () => (
   <AppStack.Navigator
     initialRouteName={'booking'}
+    headerMode="none"
     screenOptions={{ headerShown: false }}>
     <AppStack.Screen name="booking" component={BookingContainer} />
   </AppStack.Navigator>
 );
 
 const AuthStackScreen = () => (
-  <AuthStack.Navigator headerMode="none" initialRouteName={'booking'}>
+  <AuthStack.Navigator
+    headerMode="none"
+    initialRouteName={'booking'}
+    screenOptions={{ headerShown: false }}>
     <AuthStack.Screen name="login" component={LoginContainer} />
   </AuthStack.Navigator>
 );
@@ -28,7 +36,7 @@ const AuthStackScreen = () => (
 const RootStack = createStackNavigator();
 const RootStackScreen = ({ userToken }) => (
   <RootStack.Navigator headerMode="none">
-    {!userToken ? (
+    {userToken ? (
       <RootStack.Screen
         name="App"
         component={MainStack}
@@ -50,6 +58,7 @@ const RootStackScreen = ({ userToken }) => (
 
 const MainNavigator: React.FC = ({ }) => {
   const navigationRef = useRef() as React.MutableRefObject<NavigationContainerRef>;
+  const token = useSelector((root: RootState) => root.login.user.userInfo.sessionTokenBck);
 
   const [state, dispatch] = useReducer(
     (prevState, action) => {
@@ -85,22 +94,14 @@ const MainNavigator: React.FC = ({ }) => {
   const authContext = React.useMemo(
     () => ({
       signIn: async (token: string) => {
-        // In a production app, we need to send some data (usually username, password) to server and get a token
-        // We will also need to handle errors if sign in failed
-        // After getting token, we need to persist the token using AsyncStorage
-        // In the example, we'll use a dummy token
         dispatch({ type: 'SIGN_IN', token });
       },
       signOut: () => {
-        //logOutUser();
         dispatch({ type: 'SIGN_OUT' });
       },
       signUp: async (token: string) => {
-        // In a production app, we need to send user data to server and get a token
-        // We will also need to handle errors if sign up failed
-        // After getting token, we need to persist the token using AsyncStorage
-        // In the example, we'll use a dummy token
         dispatch({ type: 'SIGN_IN', token });
+        dispatch(logout());
       },
     }),
     [],
@@ -108,8 +109,9 @@ const MainNavigator: React.FC = ({ }) => {
 
   useEffect(() => {
     const bootstrapAsync = async () => {
-      if ("TOKEN") {
-        authContext.signIn("TOKEN");
+      if (token) {
+        showToast({ type: 'success', message: 'Hola, Bienvenido 🤘🤗' });
+        authContext.signIn(token);
       } else {
         authContext.signOut();
       }

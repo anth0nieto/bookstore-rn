@@ -62,10 +62,10 @@ export const loginUser =
       try {
         dispatch(slice.actions.loginInit());
         const response = await api.loginUser(email, password);
+        showToast({ type: 'success', message: 'Bienvenido 🤘🤗' });
         dispatch(slice.actions.loginSuccess(response));
-        showToast({ type: 'success', message: 'Bienvenido' });
       } catch (error) {
-        showToast({ type: 'error', message: 'Error en las credenciales' });
+        showToast({ title: 'Login Error', type: 'error', message: 'Error en las credenciales 🙃' });
         dispatch(slice.actions.loginError());
       }
     };
